@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>EPG Browser</title>
+
+  <link rel="stylesheet" href="./bulma.css" type="text/css" />
+  <link rel="stylesheet" href="./style.css" type="text/css" />
+</head>
+
+<body>
+  <div id="app">
+    <div id="headerline" v-text="'EPG Browser'"></div>
+    <div id="navbar">
+      <div id="left-nav">
+        <template v-for="item in xmlSelect">
+          <button class="btn-round" v-on:click="run_fetcher($event,item)" v-text="item.title"></button>
+        </template>
+      </div>
+      <div id="right-nav">
+        <button class="btn-round" v-on:click="clear_dta" v-text="'Clear'"></button>
+        <div class="btn-round"> Offline
+          <input id="checkBox" type="checkbox" v-on:click="offline = !offline" v-bind:checked="offline">
+        </div>
+      </div>
+    </div>
+    <div id='statusline'>
+      <div id='call-part' v-text="act_call"></div>
+      <div id='msg-part' v-text="msg"></div>
+    </div>
+
+
+    <div class="main ">
+
+      <template v-for="(item , index ) in dta_slice()">
+        <article class="xmessage">
+          <div class="xmessage-body">
+            <div class="xcolumns">
+              <div class="xkey">#</div>
+              <div class="xvalue" v-text='index'></div>
+            </div>
+            <template v-for="(value, key) in item">
+              <div class="xcolumns">
+                <div class="xkey" v-text='key'> </div>
+                <div class="xvalue" v-text='value'></div>
+              </div>
+            </template>
+          </div>
+
+        </article>
+      </template>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" src="./vue.js"></script>
+  <script type="text/javascript" src="./config.js"></script>
+  <script type="text/javascript" src="./dvbviewer.js"></script>
+
+  <script>
+    'use strict'
+
+    var app = new Vue({
+      el: "#app",
+      data: {
+        offline: false,
+        resultdta: [],
+        xmlSelect: [],
+        msg: ' ',
+        act_call: ''
+      },
+      mounted() {
+        this.switch_onoff(this.offline);
+      },
+      watch: {
+        offline: function (onoff) {
+          this.switch_onoff(onoff);
+        }
+      },
+      methods: {
+        switch_onoff: function (onoff) {
+          if (onoff === true) {
+            this.xmlSelect = cfg.files;
+          } else {
+            this.xmlSelect = cfg.urls;
+          }
+        },
+        mk_epg_params: function () {
+          let params = {};
+          let dt = new Date();
+          params['start'] = ms_datetime(dt.getFullYear(), dt.getMonth() + 1, dt.getDate()).total;
+          params['end'] = params['start'] + 2;
+          let paramstr = '';
+          for (var key in params) {
+            paramstr = paramstr + "&" + key + "=" + params[key];
+          }
+          return paramstr;
+        },
+        dta_slice: function () {
+          if (this.resultdta.length > 10) {
+            return this.resultdta.slice(0, 9);
+          }
+          return this.resultdta;
+        },
+        clear_dta: function () {
+          this.resultdta = [];
+          this.msg = ' ';
+          this.act_call = ' ';
+        },
+        run_fetcher: function (event, item) {
+          var call = eval(item.method)
+          call(event, item.url);
+        },
+        fetch_epg: function (event, url) {
+          let url1 = url + this.mk_epg_params();
+          this.fetchurl(event, url1);
+        },
+        fetchurl: function (event, url) {
+          this.act_call = url;
+          this.msg = 'loading ...';
+          this.resultdta = [];
+          let app = this;
+          // fetch data as text, maybe some error checking must be done
+          fetch(url)
+            .then((resp) => resp.text())
+            .then(function (data) {
+              //let tmp = worker(data);
+              let tmp = ms_xml_load(data);
+              app.resultdta = tmp;
+              app.msg = "found " + app.resultdta.length;
+            })
+            .catch(function (error) {
+              console.log('error ' + error)
+            });
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

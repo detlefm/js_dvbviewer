@@ -1,0 +1,89 @@
+#headerline {
+    padding: 0.2rem;
+    margin: 0.5rem;
+    border: 1px solid darkblue;
+    border-radius: 10px;
+    background-color: lightgray;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#statusline {
+    background-color: lightgray;
+}
+
+#navbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-round {
+    margin: 0.5rem;
+    background-color: blue;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
+    padding: 0.3rem 1rem 0.3rem 1rem;
+}
+
+#left-nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+#right-nav {
+    display: flex;
+}
+
+#statusline {
+    border: 1px solid darkblue;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    padding: 0 0.7rem 0 0.7rem;
+    min-height: 1.5rem;
+}
+
+#msg-part {
+    padding: 0.1rem;
+    margin: 0.1rem;
+}
+
+#call-part {
+    padding: 0.1rem;
+    margin: 0.1rem;
+}
+
+.xmessage {
+    padding: 0.2rem;
+    margin: 0.2rem;
+    border: 1px solid darkblue;
+    border-radius: 10px;
+}
+
+.xmessage-header {
+    text-align: center;
+}
+
+.xcolumns {
+    display: flex;
+    padding: 0 0.5rem 0 0.5rem;
+}
+
+.xkey {
+    color: darkred;
+    background-color: lightgray;
+    min-width: 10rem;
+    padding: 0.1rem;
+    margin: 0.1rem;
+}
+
+.xvalue {
+    color: darkblue;
+    background-color: lavender;
+    margin: 0.1rem;
+    padding: 0.1rem;
+    flex-grow: 99;
+}
