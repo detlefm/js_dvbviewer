@@ -239,7 +239,7 @@ function ms_channels_map(lst) {
 
 
 
-// mediaserver dateteime routines
+// mediaserver datetime routines
 
 function JulianDay(year, month, day) {
   let a = Math.floor((14 - month) / 12);
